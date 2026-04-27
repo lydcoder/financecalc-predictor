@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+  <p class="mb-2"><a href="{{ url_for('index') }}">&larr; Back to input</a></p>
+  <h1 class="h4 mb-1">AI-Enhanced Debt Repayment Predictor</h1>
+  <p class="text-muted small mb-2">Compare a formula-based debt schedule with a simple machine learning prediction.</p>
+  <p class="small text-secondary border rounded px-3 py-2 mb-4 bg-light">This is a learning project, not financial advice.</p>
+
+  <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 mb-4 small">
+    <div class="col"><div class="border rounded p-2 h-100 text-center bg-white"><div class="text-muted">Starting</div><strong>£{{ "{:,.2f}".format(starting_debt) }}</strong></div></div>
+    <div class="col"><div class="border rounded p-2 h-100 text-center bg-white"><div class="text-muted">Payment</div><strong>£{{ "{:,.2f}".format(monthly_payment) }}</strong></div></div>
+    <div class="col"><div class="border rounded p-2 h-100 text-center bg-white"><div class="text-muted">Formula payoff</div><strong>{% if payoff_month %}{{ payoff_month }}{% else %}—{% endif %}</strong></div></div>
+    <div class="col"><div class="border rounded p-2 h-100 text-center bg-white"><div class="text-muted">Interest</div><strong>£{{ "{:,.2f}".format(total_interest) }}</strong></div></div>
+    <div class="col"><div class="border rounded p-2 h-100 text-center bg-white"><div class="text-muted">Avg AI error</div><strong>£{{ "{:,.2f}".format(mean_abs_difference) }}</strong></div></div>
+    <div class="col"><div class="border rounded p-2 h-100 text-center bg-white"><div class="text-muted">AI payoff</div><strong>{% if ai_payoff_month %}{{ ai_payoff_month }}{% else %}—{% endif %}</strong></div></div>
+  </div>
+
+  <div class="card mb-3 border bg-white">
+    <div class="card-body">
+      <h2 class="h6 card-title">Model comparison</h2>
+      <p class="mb-1 small"><strong>Formula model:</strong> exact compound interest calculation.</p>
+      <p class="mb-1 small"><strong>AI model:</strong> linear regression fitted to the monthly balance data.</p>
+      <p class="mb-0 small"><strong>Average prediction difference:</strong> £{{ "{:,.2f}".format(mean_abs_difference) }}</p>
+    </div>
+  </div>
+
+  <p class="small text-center text-muted mb-2">The AI prediction is shown across the same forecast window so the learned trend can be compared with the formula-based schedule.</p>
+
+  <div class="border rounded bg-white p-2 mb-4" style="height: 380px;">
+    <canvas id="debtChart"></canvas>
+  </div>
+
+  <h2 class="h6">Month-by-month</h2>
+  <div class="table-responsive border rounded bg-white mb-2">
+    <table class="table table-sm table-striped mb-0">
+      <thead><tr><th>Month</th><th>Formula</th><th>AI</th></tr></thead>
+      <tbody>
+        {% for row in table_rows %}
+        <tr><td>{{ row.month }}</td><td>£{{ "{:,.2f}".format(row.formula) }}</td><td>£{{ "{:,.2f}".format(row.ml) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if table_tail_note %}
+  <p class="small text-center text-muted mb-4">{{ table_tail_note }}</p>
+  {% endif %}
+
+  <div class="bg-light border rounded p-3 mb-3 small">
+    <strong>How the AI works:</strong> The model takes month number as the input and debt balance as the output. It learns the downward trend and predicts future balances using linear regression.
+  </div>
+  <div class="bg-light border rounded p-3 mb-4 small">
+    <strong>Limitations:</strong> Linear regression is simple and may not perfectly follow curved repayment schedules, especially near the point where the debt reaches zero.
+  </div>
+
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Run another prediction</a>
+
+  <script id="chart-data" type="application/json">{{ chart_data|tojson }}</script>
+  <script>
+  (function () {
+    var el = document.getElementById('chart-data');
+    var data = JSON.parse(el.textContent);
+    var ctx = document.getElementById('debtChart');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          { label: 'Formula schedule', data: data.formula, borderColor: 'rgb(13,110,253)', tension: 0.15, borderWidth: 2 },
+          { label: 'AI prediction', data: data.ml, borderColor: 'rgb(157,44,255)', tension: 0.15, borderWidth: 2 },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: { display: true, text: 'Formula schedule vs AI prediction', font: { size: 15, weight: '600' } },
+        },
+        scales: {
+          y: { beginAtZero: true, title: { display: true, text: 'Balance (£)' } },
+          x: { title: { display: true, text: 'Month' } },
+        },
+      },
+    });
+  })();
+  </script>
+{% endblock %}

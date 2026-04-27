@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="h4 mb-2">AI-Enhanced Debt Repayment Predictor</h1>
+  <p class="text-muted mb-3">Compare a formula-based debt schedule with a simple machine learning prediction.</p>
+  <p class="small text-secondary border rounded px-3 py-2 mb-4 bg-light">This is a learning project, not financial advice.</p>
+
+  {% if error %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+  {% endif %}
+
+  <div class="card shadow-sm border">
+    <div class="card-body py-3">
+      <form method="post" action="{{ url_for('predict') }}" class="row g-3">
+        <div class="col-md-6">
+          <label for="starting_debt" class="form-label">Starting debt (£)</label>
+          <input type="number" step="0.01" min="0.01" class="form-control" id="starting_debt" name="starting_debt" value="{{ request.form.get('starting_debt', '2000') }}" required>
+        </div>
+        <div class="col-md-6">
+          <label for="annual_interest_rate" class="form-label">Annual interest rate (%)</label>
+          <input type="number" step="0.01" min="0" class="form-control" id="annual_interest_rate" name="annual_interest_rate" value="{{ request.form.get('annual_interest_rate', '18') }}" required>
+        </div>
+        <div class="col-md-6">
+          <label for="monthly_payment" class="form-label">Monthly repayment (£)</label>
+          <input type="number" step="0.01" min="0.01" class="form-control" id="monthly_payment" name="monthly_payment" value="{{ request.form.get('monthly_payment', '150') }}" required>
+        </div>
+        <div class="col-md-6">
+          <label for="forecast_months" class="form-label">Forecast months (1–120)</label>
+          <input type="number" step="1" min="1" max="120" class="form-control" id="forecast_months" name="forecast_months" value="{{ request.form.get('forecast_months', '24') }}" required>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary btn-lg">Generate prediction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
