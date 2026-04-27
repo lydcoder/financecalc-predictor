@@ -1,6 +1,6 @@
-# Fin1AI
+# FinanceCalc Predictor
 
-Fin1AI is a small **Python / Flask** learning project built around **debt and interest calculators**. It has two deployable surfaces:
+**FinanceCalc Predictor** is a small **Python / Flask** learning project built around **debt and interest calculators**. It has two deployable surfaces:
 
 1. **`financecalc/`** — a single Flask application that serves a **compound-interest repayment calculator** (with a **simple-interest comparison** lane) and an **integrated AI debt predictor** on a separate URL.
 2. **`ai_debt_predictor/`** — the same **predictor logic** packaged as a **minimal standalone Flask app** (useful for demos or isolating the “AI vs formula” feature).
