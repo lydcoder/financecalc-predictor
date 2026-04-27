@@ -1,0 +1,52 @@
+.compound-results {
+    text-align: center; /* Center aligns the text */ 
+    color: #495057; /* Sets the text color */ 
+    margin-top: 20px; /* Top margin */
+    margin-bottom: 20px; /* Bottom margin */
+    font-family: 'Arial', sans-serif; /* Font family */
+    font-size: 24px; /* Font size */
+    font-weight: bold; /* Font weight */
+    border-bottom: 2px solid #6c757d; /* Adds a bottom border */
+    display: inline-block; /* Required for the border to fit the text */
+    padding-bottom: 5px; /* Padding to space out the border */
+}
+
+
+.my_container {
+    width: 70%;
+    margin: auto;
+    border: 0px solid #73AD21;
+  }
+
+.error-message {
+border: 2px solid rgba(255, 0, 0);
+color: black;
+font-weight: bold;
+padding: 3px;
+background-color: rgb(243, 173, 173);
+border-radius: 5px;
+}
+
+.my_container h3 {
+    font-size: 2.5em;  /* Makes the text larger */
+    font-weight: bold;  /* Makes the text bold */
+    color: #FFFFFF;  /* Sets the text color to white */
+    background-color: #b7d4e4;  /* Sets the background color to tomato */
+    padding: 20px;  /* Adds some space around the text */
+    border-radius: 10px;  /* Rounds the corners of the banner */
+}
+
+
+
+.title-embossed {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+/*For the main container of the page*/
+.custom-container {
+    max-width: 00px !important
+}

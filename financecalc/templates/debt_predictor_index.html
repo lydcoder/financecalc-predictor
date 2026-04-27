@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+<div class="debt-predictor-page">
+    <div class="container px-3">
+        <div class="title-embossed d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <a class="myButton" href="{{ url_for('index') }}">Go back to instructions page</a>
+            <div class="title-text dp-title-stack">
+                <div class="dp-main-title">AI-Enhanced Debt Repayment Predictor</div>
+                <div class="dp-main-subtitle">Compare a formula-based debt schedule with a simple machine learning prediction.</div>
+            </div>
+            <a class="myButton" href="{{ url_for('index') }}">Compound calculator</a>
+        </div>
+    </div>
+
+    <div class="container px-3">
+        <div class="dp-advice-banner mx-auto">
+            This is a learning project, not financial advice.
+        </div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container text-center">
+            <div class="dp-white-card dp-form-card">
+                <form method="post" action="{{ url_for('debt_predictor_predict') }}" class="w-100 mx-auto" style="max-width: 920px;">
+                    {% if error %}
+                    <div class="error-message mb-3 mx-auto text-center" style="max-width: 520px;">
+                        <p class="mb-0">{{ error }}</p>
+                    </div>
+                    {% endif %}
+                    <div class="container-fluid px-0">
+                        <div class="row justify-content-center g-3 dp-form-grid">
+                            <div class="col-12 col-sm-6 col-lg-3 dp-field">
+                                <label for="starting_debt">Starting debt (£)</label>
+                                <input type="number" step="0.01" min="0.01" class="form-control form-control-lg mx-auto" id="starting_debt" name="starting_debt" value="{{ request.form.get('starting_debt') or (dp_last.starting_debt if dp_last else '') or '2000' }}" required>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3 dp-field">
+                                <label for="annual_interest_rate">Annual interest rate (%)</label>
+                                <input type="number" step="0.01" min="0" class="form-control form-control-lg mx-auto" id="annual_interest_rate" name="annual_interest_rate" value="{{ request.form.get('annual_interest_rate') or (dp_last.annual_interest_rate if dp_last else '') or '18' }}" required>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3 dp-field">
+                                <label for="monthly_payment">Monthly repayment (£)</label>
+                                <input type="number" step="0.01" min="0.01" class="form-control form-control-lg mx-auto" id="monthly_payment" name="monthly_payment" value="{{ request.form.get('monthly_payment') or (dp_last.monthly_payment if dp_last else '') or '150' }}" required>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3 dp-field">
+                                <label for="forecast_months">Forecast months (1–120)</label>
+                                <input type="number" step="1" min="1" max="120" class="form-control form-control-lg mx-auto" id="forecast_months" name="forecast_months" value="{{ request.form.get('forecast_months') or (dp_last.forecast_months if dp_last else '') or '24' }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center dp-actions">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg custom-calculate-btn">Generate prediction</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container">
+            <div class="dp-info-panel">
+                <p class="mb-0">Enter your details and submit to see the formula schedule next to an AI trend line, summary metrics, and a trimmed month-by-month table when the balance reaches zero.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

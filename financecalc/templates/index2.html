@@ -1,0 +1,520 @@
+
+{% extends "base.html" %}
+{% block content %}
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src=".js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<!--<link rel="stylesheet" href="{{ url_for('static', filename='css/compound.css') }}">-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+
+<!--495057  #6c757d-->
+
+
+<div class="container">
+    <!--title div-->
+    <!--<div class="my_container rounded-2 text-center"> 
+            <h3>Credit Card Repayment Calculator</h3>
+    </div> -->
+
+    <div class="container">
+        <div class="title-embossed d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <a class="myButton" href="{{ url_for('index') }}">Go back to instructions page</a>
+            <div class="title-text">Compound Interest Calculator</div>
+            <a class="myButton" href="{{ url_for('debt_predictor') }}">AI-enhanced predictor</a>
+        </div>
+    </div>
+    <div class="my_container text-center" style="padding: 20px;">
+        <div class="d-flex justify-content-center p-5 bg-dark-subtle rounded-2">
+            <form id="IndexForm" action="/" method="post" class="w-100">
+                <!-- Form content -->
+                <div class="container-md">
+                    <div class="row justify-content-center">
+                        {{ form.hidden_tag() }}
+                        <div class="col-12 col-md-4 mb-3">
+                            <label>{{ form.apr.label() }}</label>
+                            <input type="number" name="{{ form.apr.name }}" value="{{ form.apr.data }}" class="form-control form-control-lg">
+                            {% for error in form.apr.errors %}
+                            <div class="error-message mt-3">
+                                <p>{{ error }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-12 col-md-4 mb-3">
+                            <label>{{ form.min_pay.label() }}</label>
+                            <input type="number" name="{{ form.min_pay.name }}" value="{{ form.min_pay.data }}" class="form-control form-control-lg">
+                            {% for error in form.min_pay.errors %}
+                            <div class="error-message mt-3">
+                                <p>{{ error }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-12 col-md-4 mb-3">
+                            <label>{{ form.debt_balance.label() }}</label>
+                            <input type="number" name="{{ form.debt_balance.name }}" value="{{ form.debt_balance.data }}" class="form-control form-control-lg">
+                            {% for error in form.debt_balance.errors %}
+                            <div class="error-message mt-3">
+                                <p>{{ error }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-6 mb-3">
+                            <label for="currency">Select Currency:</label>
+                            <select id="currency" name="currency" class="form-control form-control-lg">
+                                <option value="USD">$ USD</option>
+                                <option value="EUR">€ EUR</option>
+                                <option value="GBP">£ GBP</option>
+                                <option value="CNY">¥ CNY</option>
+                                <option value="INR">₹ INR</option>
+                                <option value="BRL">R$ BRL</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-4 mb-3">
+                        {{ form.submit(class="btn btn-primary btn-lg custom-calculate-btn") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+
+
+<div class="info-container">
+    <div class="info-box">
+        <h4 class="underline">Interest Rate:</h4>
+        <p><strong>{{form.apr.data}}</strong></p>
+    </div>
+    <div class="info-box">
+        <h4 class="underline">Monthly Payment:</h4>
+        <p><strong>{{form.min_pay.data}}</strong></p>
+    </div>
+    <div class="info-box">
+        <h4 class="underline">Debt Balance:</h4>
+        <p><strong>{{form.debt_balance.data}}</strong></p>
+    </div>
+</div>
+
+
+
+<!--FORM END-->
+{% if check_debt_valid == True %}
+<div class="my_container" style="background-color:white"> <!-- Outermost container with a dark gray background -->
+    <!--information panel div open-->
+        <div class="container text-center" style="padding: 10px;"> <!-- Bootstrap container for centering content, with 20 pixels of padding -->
+            <div class="row"> <!-- Bootstrap row to hold columns -->
+                <div class="col-md-8"> <!-- Column for text content, taking up 8 of 12 grid columns -->
+                    <div class="p-5 bg-dark-subtle rounded-2 text-center"> <!-- Inner container with padding, rounded corners, and a subtle dark background -->
+                        <div class="lead text-center"><!-- Text content displayed in a larger, "lead" font size -->
+                            Repayment would take <strong> {{ years_to_pay }}</strong> years and <strong>{{ months_to_pay }}</strong> months <!-- Displaying the number of years and months for repayment -->
+                        </div>
+                        <div class="lead text-center">Total accrued interest would be <strong>{{currency}}{{ accrued_total }}</strong></div>
+                            <!-- Displaying the total accrued interest -->
+                        <div class="lead text-center">Total to payback is <strong>{{currency}}{{total_payback}} </strong> <!-- Displaying the total amount to pay back -->
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="col-md-4"> <!-- Column for the chart, taking up 4 of 12 grid columns -->
+                    <div class="chart-container" style="position: relative; height:200px; width:200px;"> <!-- Container for the chart with specific dimensions -->
+                        <canvas id="myChart" width="700" height="700"></canvas> <!-- Canvas element where the chart will be rendered -->
+                    
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Including the Chart.js library -->
+                        <script>
+                            var ctx = document.getElementById('myChart').getContext('2d'); // Getting the canvas context where the chart will be drawn
+                            var myChart = new Chart(ctx, { // Creating a new Chart.js chart
+                                type: 'bar', // Specifying the chart type as 'bar'
+                                data: { // Data for the chart
+                                    labels: ['Principal', 'Total Debt'], // Labels for the bars
+                                    datasets: [{ // Dataset for the bars
+                                        label: 'Graph Comparison', // Label for the dataset
+                                        data: [{{ principal }}, {{ total_payback_int }}], // Data values for the bars
+                                        backgroundColor: [ // Background colors for the bars
+                                            'rgba(0, 26, 255, 0.5)',  // Color for Principal bar
+                                            'rgba(157, 44, 255, 0.5)'  // Color for Total Debt bar
+                                        ],
+                                        borderColor: [ // Border colors for the bars
+                                            'rgba(3, 57, 230, 1)',  // Border color for Principal bar
+                                            'rgba(157, 44, 255, 1)'  // Border color for Total Debt bar
+                                        ],
+                                        borderWidth: 2 // Border width for the bars
+                                        
+                                        
+                                    }]
+                                },
+                                // Options for the chart
+                                options: {
+                                    scales: {
+                                        y: {
+                                            // Starting the y-axis at zero
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+
+    <style>
+        .col {
+            background-color: #c4d8db;  /* Light blue */
+            padding: 20px;  /* Adds some space inside the containers */
+            margin: 10px;  /* Adds some space between the containers */
+        }
+        </style>
+
+
+
+<!--
+<style>
+    .underlined {
+        text-decoration: underline;
+    }
+    </style>
+    
+    <h2 class="mb-4 mt-2 text-center text-secondary underlined">Compound Results</h2>
+-->
+
+
+
+<h2 class="compound-results">Compound Results</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center rounded py-1" style="background-color: cde2ee;">
+            <img class="mt-3" src="{{ url_for('static', filename='money.png') }}" alt="Description of Image" width="100" height="100">
+            <p class="mt-3 top-margin">Total repayment amount would be: <strong id="totalRepayment">{{currency}}{{total_payback}} </strong></p>
+        </div>
+        <div class="col text-center rounded py-1" style="background-color: cde2ee;">
+            <img class="mt-3" src="{{ url_for('static', filename='clock.png') }}" alt="Description of Image" width="100" height="100">
+            <p class="mt-3 top-margin">It will take you a total of <strong>{{years_to_pay}}</strong> years and <strong>{{months_to_pay}}</strong> months to fully pay off your debt.</p>
+        </div>
+        <div class="col text-center rounded py-1" style="background-color: cde2ee;">
+            <img class="mt-3" src="{{ url_for('static', filename='monpayment.png') }}" alt="Description of Image" width="100" height="100">
+            <p class="mt-3 top-margin">The accrued interest on your payment would amount to <strong id="accruedInterest">{{currency}}{{accrued_total}}</strong></p>
+        </div>
+    </div>
+</div>
+
+
+
+    <!--<div class="m-4">-->
+            <div class="accordion" style="max-width: 911px; margin: auto; padding-top: 20px; padding-bottom: 20px;" id="myAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button type="button" class="accordion-button collapsed" style="background-color: f0f0f0;" data-bs-toggle="collapse" data-bs-target="#collapseOne">View breakdown of payments</button>									
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse">
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                            
+                                    <th scope="col">Month </th>
+                                    <th scope="col">Interest</th>
+                                    <th scope="col">Principal Payment</th>
+                                    <th scope="col">Accrued Interest</th>
+                                    <th scope="col">Principal Balance</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in range(0,month_list|length) %}
+                                    <!-- use modulus to calculate month excluding month 1-->
+                                    {% if i % 12 == 0 and i != 0 %} 
+                                        <!-- Change colour if meets modulus -->
+                                        <tr class="table-info font-weight-bold">
+                                    <!-- If not modulus -->
+                                    {% elif i % 12 != 0 %}
+                                        <tr class="text-muted">
+                        
+                                    {% elif i == 0 %} <!--First Row -->
+                                        <tr class="table-warning">
+                                    {% endif %}
+                            
+                                    {% if i == month_list[-1] %} <!--Last Row -->
+                                        <tr class="table-success">
+                                    {% endif %}
+                                        <td >{{ month_list[i] }}</td>
+                                        <td>{{ '{:,}'.format(interest_list[i]) }}</td> <!--Formated for thousands-->
+                                        
+                                        {% if interest_list[i] == 0 %}
+                                            <td>0</td>
+                                        
+                                        {% elif interest_list[i] != 0 %}
+                        
+                                        <td>{{ p_payment(interest_list[i],min_payment) }}
+                                        
+                                        {% endif %}
+                                        <td>{{ '{:,}'.format(accrued_interest_list[i]) }}</td> <!--Formated for thousands-->
+                                        <td>{{ '{:,}'.format(principal_list[i]) }}</td> <!--Formated for thousands-->
+                                    
+                                    </tr>
+                                    
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!--</div>-->
+
+<div class="container p-4 border-2" style="padding: 10px; background-color: aliceblue;">
+    <div class="lead text-center">The following section delves into a comparison between the costs associated with compounded credit card debt and those of a loan with a fixed 10% (which is normally the average rate) interest rate. </div>
+    <div class="lead text-center">By examining these scenarios, you can see firsthand the impact of compound interest on your finances.</div>
+</div>
+
+<h2 class="compound-results">Loan results</h2>
+<div class="container p-4 border-2" style="padding: 10px; background-color: white;">
+    <p style="font-family: Arial, sans-serif; font-size: 18px; text-decoration: underline;">Below are the loan calculation figures for your debt amount of {{currency}}{{form.debt_balance.data}}:</p>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center rounded py-1" style="background-color: cde2ee;">
+            <img class="mt-3" src="{{ url_for('static', filename='money.png') }}" alt="Description of Image" width="100" height="100">
+            <p class="mt-3 top-margin">You would to have pay back a total of <strong id="siPriInterest">{{currency}}{{si_pri_interest}}</strong> on a loan</p>
+        </div>
+        <div class="col text-center rounded py-1" style="background-color: cde2ee;">
+            <img class="mt-3" src="{{ url_for('static', filename='clock.png') }}" alt="Description of Image" width="100" height="100">
+            <p class="mt-3 top-margin">You would completely pay off the debt in <strong>{{si_years_no}}</strong> years and <strong>{{si_month_no}}</strong> months on a loan.</p>
+        </div>
+        <div class="col text-center rounded py-1" style="background-color: cde2ee;">
+            <img class="mt-3" src="{{ url_for('static', filename='monpayment.png') }}" alt="Description of Image" width="100" height="100">
+            <p class="mt-3 top-margin">You will accrue <strong id="siAccruedInt">{{currency}}{{si_accrued_int}}</strong> in fixed interest.</p>
+        </div>
+    </div>
+</div>
+
+<div class="compound-results">Loan Comparison</div>
+
+            {% if validate_greater_int == False %}
+            <!--divider-->
+                <div class="container text-center" style="padding: 10px;">
+                    <div class="row">
+                        <!-- Chart -->
+                        <div class="col-md-4">
+                            <div class="chart-container" style="height: 300px;">
+                                <canvas id="doughnutChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Existing Content -->
+                        <div class="col-md-8">
+                            <div class="p-5 bg-dark-subtle rounded-2 text-center">
+                                <div class="lead text-center">
+                                    <div>
+                                        <div class="lead text-center">Choosing a loan could save you <strong id="compSimpDisplay">{{currency}}{{comp_simp_display}}</strong> on your debt, reducing your payments by <strong>{{final_princ_perc_comp}}%</strong>.</div>
+                                        <div class="lead text-center">With the loan, the total interest accrued would be <strong id="loanAccruedInt">{{currency}}{{si_accrued_int}}</strong>, which is <strong>{{accrued_percent_comparison}}%</strong> less than the interest on a credit card.</div>
+                                        <div class="lead text-center">You could be debt-free in just <strong>{{si_years_no}}</strong> years and <strong>{{si_month_no}}</strong> months,in a much significantly faster way than with compounded credit card debt.</div>
+                                        <div class="lead text-center">Overall, this translates to paying off your loan <strong>{{comp_years}}</strong> years and <strong>{{final_month}}</strong> months sooner than on your compounded debt.</div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            
+            <!-- Include Chart.js -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                var ctx = document.getElementById('doughnutChart').getContext('2d');
+                var doughnutChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['compound interest', 'simple interest'],
+                        datasets: [{
+                            data: [{{ total_payback_int }}, {{ si_pri_interest }}],
+                            backgroundColor: [
+                                'rgba(0, 26, 255, 0.5)',
+                                'rgba(157, 44, 255, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(0, 26, 255, 1)',
+                                'rgba(157, 44, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            </script>
+        <!--   
+        <div class="container text-center" style="padding: 10">
+            <div class="d-inline-flex p-5 bg-dark-subtle rounded-2 text-center ">
+                <p>Total to pay back on initial principal is {{si_pri_interest}}</p>
+                <p>Total years is {{si_years_no}} and month {{si_month_no}}</p>
+                <p>accrued interest is {{si_accrued_int}}</p>
+                <p>total percentage paid {{si_percent_paid}}</p>
+            </div> 
+        </div>  
+        --> 
+
+
+<button class="elegant-button" id="saveAsPdfButton">Save as PDF</button>
+
+
+
+
+<script>
+document.getElementById('saveAsPdfButton').addEventListener('click', function () {
+    // Get the container you want to hide
+    var container = document.querySelector('.my_container');
+
+    // Add the 'hide-for-screenshot' class to hide the container
+    container.classList.add('hide-for-screenshot');
+
+    html2canvas(document.body, {
+        scrollX: 0,
+        scrollY: 0
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        
+        // Calculate the PDF width and height based on the canvas dimensions
+        const pdfWidth = canvas.width;
+        const pdfHeight = canvas.height;
+        
+        // Initialize jsPDF with calculated dimensions
+        let pdf = new jspdf.jsPDF({
+            orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
+            unit: 'px',
+            format: [pdfWidth, pdfHeight]
+        });
+        
+        // Add the canvas image to the PDF
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        
+        // Save the PDF
+        pdf.save('webpage.pdf');
+
+        // Remove the 'hide-for-screenshot' class to show the container again
+        container.classList.remove('hide-for-screenshot');
+    });
+});
+</script>
+
+    </div>
+
+    </div>
+</div>
+</div>
+    
+    {% elif validate_greater_int == True %}
+
+<div class="container p-4 border-2" style="padding: 10px; background-color:#cde2ee"> <!-- Outermost container with a dark gray background -->
+    <!--<div class="container text-center" style="padding: 10px;"> --> <!-- Bootstrap container for centering content, with 20 pixels of padding -->
+        <div class="lead text-center">Over time, this interest will compound and substantially increase the total debt. As interest accrues not only on the original amount borrowed </div>
+        <div class="lead text-center">but also on the accumulated interest from previous periods, the debt can grow at an exponential rate. </div>
+        <div class="lead text-center">This compounding effect underscores the importance of strategic debt management and timely payments to mitigate the escalating costs associated with long-term debt accumulation. </div>
+    </div>
+
+<div class="container p-4 mt-3 border-2 d-flex justify-content-center" style="padding: 10px;">
+    <button class="save-button" id="saveAsPdfButton">Save as PDF</button>
+</div>
+
+</div> <!--closing container-->
+
+
+
+
+
+
+<script>
+document.getElementById('saveAsPdfButton').addEventListener('click', function () {
+    html2canvas(document.body, {
+    scrollX: 0,
+    scrollY: 0
+    }).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    
+    // Calculate the PDF width and height based on the canvas dimensions
+    const pdfWidth = canvas.width;
+    const pdfHeight = canvas.height;
+    
+    // Initialize jsPDF with calculated dimensions
+    let pdf = new jspdf.jsPDF({
+        orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [pdfWidth, pdfHeight]
+    });
+    
+    // Add the canvas image to the PDF
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    
+    // Save the PDF
+    pdf.save('webpage.pdf');
+    });
+  });
+</script>
+
+    </div>
+
+    </div>
+</div>
+</div>
+    {% endif %}
+
+
+
+<!--information panel div close-->
+
+
+<!-- Interest vs Principal chart type open -->
+<!-- Interest vs Principal chart type open -->
+<!-- Interest vs Principal chart type open -->
+<div>
+    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+</div>
+
+
+
+<!-- Interest vs Principal chart type close -->
+<!-- Interest vs Principal chart type close -->
+<!-- Interest vs Principal chart type close -->
+{% elif check_debt_valid == false %}
+<div class="alert-container">
+    <div class="alert-heading">Your debt repayment will exceed 20 years</div>
+    <div class="alert-body">
+        Your debt repayment will exceed 20 years, which is a lot longer than what's usually expected. This can largely be due to how compound interest piles up over time, increasing your total debt significantly. By raising your monthly payments, you could significantly shorten the debt repayment period.
+    </div>
+  </div>
+
+  <div class="accordion" style="max-width: 911px; margin: auto; padding-top: 20px; padding-bottom: 20px;" id="myAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button type="button" class="accordion-button collapsed" style="background-color: f0f0f0;" data-bs-toggle="collapse" data-bs-target="#collapseOne">More info</button>									
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse">
+            <div class="card-body">
+                <div class="alert-container">
+                    <div class="alert-body">
+                        To handle this better, it might be a good idea to look into different payment options, like refinancing or consolidating your debt. You could also consider chatting with a financial advisor who can help you tailor a plan that fits your financial situation and goals. Starting sooner rather than later can really help cut down on the extra interest and make managing your debt a lot simpler. 
+                        Taking action now is important for improving your financial health and finding peace of mind.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+{% endblock %}
+
+

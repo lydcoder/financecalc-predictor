@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+<div class="debt-predictor-page">
+    <div class="container px-3">
+        <div class="title-embossed d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <a class="myButton" href="{{ url_for('debt_predictor') }}">Back to predictor form</a>
+            <div class="title-text dp-title-stack">
+                <div class="dp-main-title">AI-Enhanced Debt Repayment Predictor</div>
+                <div class="dp-main-subtitle">Compare a formula-based debt schedule with a simple machine learning prediction.</div>
+            </div>
+            <a class="myButton" href="{{ url_for('index') }}">Go back to instructions page</a>
+        </div>
+    </div>
+
+    <div class="container px-3">
+        <div class="dp-advice-banner mx-auto">
+            This is a learning project, not financial advice.
+        </div>
+    </div>
+
+    <div class="container px-3">
+        <div class="dp-summary-grid dp-summary-grid--six">
+            <div class="dp-metric-card">
+                <h4 class="underline">Starting debt</h4>
+                <p><strong>&pound;{{ "{:,.2f}".format(starting_debt) }}</strong></p>
+            </div>
+            <div class="dp-metric-card">
+                <h4 class="underline">Monthly repayment</h4>
+                <p><strong>&pound;{{ "{:,.2f}".format(monthly_payment) }}</strong></p>
+            </div>
+            <div class="dp-metric-card">
+                <h4 class="underline">Formula payoff month</h4>
+                <p><strong>{% if payoff_month %}{{ payoff_month }}{% else %}Beyond forecast{% endif %}</strong></p>
+            </div>
+            <div class="dp-metric-card">
+                <h4 class="underline">Total interest (window)</h4>
+                <p><strong>&pound;{{ "{:,.2f}".format(total_interest) }}</strong></p>
+            </div>
+            <div class="dp-metric-card">
+                <h4 class="underline">Average AI prediction error</h4>
+                <p><strong>&pound;{{ "{:,.2f}".format(mean_abs_difference) }}</strong></p>
+                <p class="dp-metric-hint">Average difference from formula (&pound; per month)</p>
+            </div>
+            <div class="dp-metric-card">
+                <h4 class="underline">AI predicted payoff month</h4>
+                <p><strong>{% if ai_payoff_month %}{{ ai_payoff_month }}{% else %}Beyond forecast{% endif %}</strong></p>
+                <p class="dp-metric-hint">First month the AI line reaches &pound;0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container dp-main-column">
+            <div class="dp-key-takeaway">
+                <strong>Key takeaway:</strong>
+                The AI model closely follows the repayment trend, with an average difference of
+                <strong>&pound;{{ "{:,.2f}".format(mean_abs_difference) }}</strong> per month{% if payoff_month %}, but may diverge slightly near the payoff point (month {{ payoff_month }} on the formula){% else %}; divergence is often larger when the balance stays positive for the whole forecast{% endif %}.
+            </div>
+        </div>
+    </div>
+
+    {% if never_decreasing %}
+    <div class="container px-3">
+        <div class="alert-container">
+            <div class="alert-heading">Repayment warning</div>
+            <div class="alert-body">
+                Your monthly repayment does not cover the interest charged on the opening balance, so the debt would grow on the formula model.
+                The chart and ML line still show a trend for comparison only.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="compound-results-container">
+        <div class="compound-results">Model comparison</div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container dp-main-column">
+            <div class="dp-white-card dp-model-compare">
+                <p class="mb-3"><strong>Formula result:</strong> This is the exact repayment calculation. It adds interest each month, then subtracts your monthly payment.</p>
+                <p class="mb-3"><strong>AI prediction:</strong> This is an estimate. It looks at the repayment pattern and predicts how the debt might fall over time.</p>
+                <p class="mb-3"><strong>Why they are different:</strong> The formula is exact. The AI prediction is only trying to follow the trend, so it may be slightly higher or lower.</p>
+                <p class="mb-0"><strong>Average difference:</strong> In this example, the AI prediction is usually about &pound;{{ "{:,.2f}".format(mean_abs_difference) }} away from the exact formula result.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="compound-results-container">
+        <div class="compound-results">Debt balance: formula vs AI prediction</div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container dp-main-column">
+            <div class="dp-white-card dp-bordered-hint mb-2">
+                <p class="mb-0 text-center">The AI prediction is shown across the same forecast window so the learned trend can be compared with the formula-based schedule. <strong>Shaded band</strong> between the lines highlights the gap between the two models.</p>
+            </div>
+            <div class="dp-white-card dp-chart-card dp-chart-card--hero">
+                <div class="dp-chart-wrap dp-chart-wrap--large">
+                    <canvas id="debtChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="compound-results-container">
+        <div class="compound-results">Month-by-month comparison</div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container dp-main-column">
+            <div class="dp-white-card dp-table-card">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Month</th>
+                                <th scope="col">Formula balance</th>
+                                <th scope="col">AI predicted balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_rows %}
+                            <tr>
+                                <td>{{ row.month }}</td>
+                                <td>&pound;{{ "{:,.2f}".format(row.formula) }}</td>
+                                <td>&pound;{{ "{:,.2f}".format(row.ml) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if table_tail_note %}
+                <p class="dp-table-note mb-0 mt-3 text-center">{{ table_tail_note }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container px-3 text-center dp-footer-actions">
+        <a class="btn btn-primary btn-lg custom-calculate-btn d-inline-flex align-items-center justify-content-center" href="{{ url_for('debt_predictor') }}">Run another prediction</a>
+    </div>
+
+    <div class="compound-results-container">
+        <div class="compound-results">How the AI works</div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container dp-main-column">
+            <div class="dp-info-panel">
+                <p class="mb-0">The model takes <strong>month number</strong> as the input and <strong>debt balance</strong> as the output. It learns the downward trend and predicts future balances using linear regression (ordinary least squares).</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="compound-results-container">
+        <div class="compound-results">Limitations</div>
+    </div>
+
+    <div class="container px-3">
+        <div class="my_container dp-main-column">
+            <div class="dp-info-panel">
+                <p class="mb-0">Linear regression is simple and may not perfectly follow curved repayment schedules, especially near the point where the debt reaches zero. This app is for learning and comparison only, not financial advice.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script id="chart-data" type="application/json">{{ chart_data|tojson }}</script>
+<script>
+(function () {
+  var el = document.getElementById('chart-data');
+  var data = JSON.parse(el.textContent);
+  var ctx = document.getElementById('debtChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.labels,
+      datasets: [
+        {
+          label: 'Formula schedule',
+          data: data.formula,
+          borderColor: 'rgb(13, 110, 253)',
+          backgroundColor: 'rgba(13, 110, 253, 0.12)',
+          tension: 0.2,
+          fill: 'origin',
+          borderWidth: 3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+        {
+          label: 'AI prediction',
+          data: data.ml,
+          borderColor: 'rgb(142, 68, 173)',
+          backgroundColor: 'rgba(100, 60, 130, 0.22)',
+          tension: 0.2,
+          fill: '-1',
+          borderWidth: 3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Balance (£)', font: { size: 13, weight: '600' } },
+        },
+        x: {
+          title: { display: true, text: 'Month', font: { size: 13, weight: '600' } },
+        },
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: 'Debt balance: formula vs AI prediction',
+          font: { size: 18, weight: '700' },
+          color: '#343a40',
+          padding: { bottom: 18, top: 6 },
+        },
+        legend: { position: 'top', labels: { boxWidth: 14, font: { size: 12 } } },
+        tooltip: { mode: 'index', intersect: false },
+      },
+    },
+  });
+})();
+</script>
+{% endblock %}

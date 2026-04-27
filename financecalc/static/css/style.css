@@ -1,0 +1,624 @@
+.compound-results {
+    text-align: center;
+    color: #495057;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 2px solid #6c757d;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding-bottom: 5px;
+}
+
+.compound-results-container {
+    text-align: center;
+    width: 100%;
+}
+
+
+.my_container {
+    width: 70%;
+    margin: auto;
+    border: 0px solid #73AD21;
+  }
+
+.error-message {
+border: 2px solid rgba(255, 0, 0);
+color: black;
+font-weight: bold;
+padding: 3px;
+background-color: rgb(243, 173, 173);
+border-radius: 5px;
+}
+
+.my_container h3 {
+    font-size: 2.5em;  /* Makes the text larger */
+    font-weight: bold;  /* Makes the text bold */
+    color: #FFFFFF;  /* Sets the text color to white */
+    background-color: #b7d4e4;  /* Sets the background color to tomato */
+    padding: 20px;  /* Adds some space around the text */
+    border-radius: 10px;  /* Rounds the corners of the banner */
+}
+@media (max-width: 768px) {
+    /* On tablets or smaller screens */
+    .my_container {
+        width: 95%;  /* Make the container wider on smaller screens */
+    }
+    
+    .form-control-lg {
+        font-size: 16px; /* Adjust input field size for better mobile display */
+    }
+}
+
+.custom-calculate-btn {
+    width: 100%;        /* Full width on mobile */
+    max-width: 200px;   /* Wider button but not as wide as the select box */
+    margin: 0 auto;     /* Center it horizontally */
+    padding-top: 20px;  /* Add some space above the button */
+    height: 50px;       /* Set a fixed height */
+}
+
+@media (min-width: 768px) {
+    .custom-calculate-btn {
+        max-width: 250px; /* Adjust for larger screens */
+    }
+}
+
+.info-container {
+    display: flex; /* Aligns children (info-box) in a row */
+    justify-content: center; /* Centers the info boxes horizontally */
+    flex-wrap: wrap; /* Allows boxes to wrap on smaller screens */
+    padding: 10px; /* Adds padding around the container */
+}
+
+.info-box {
+    background-color: #cde2ee; /* Light blue background */
+    margin: 20px; /* Space between boxes */
+    padding: 10px; /* Padding inside each box */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center text inside each box */
+    width: 268px; /* Fixed width for desktop */
+    flex: none; /* Prevent flex-grow or shrink */
+}
+
+@media (max-width: 768px) {
+    .info-box {
+        width: 100%; /* Full width on smaller screens */
+        max-width: 380px; /* Limit the maximum width to match form size */
+        margin: 10px auto; /* Center the boxes on smaller screens */
+    }
+}
+
+.info-box h4 {
+    margin-bottom: 8px; /* Space between header and data */
+    color: #333; /* Darker header text */
+    font-size: 1rem; /* Header font size */
+}
+
+.info-box p {
+    font-size: 0.9rem; /* Smaller font size for data */
+    color: #666; /* Lighter text for data */
+}
+
+
+/*For the main container of the page*/
+.custom-container {
+    max-width: 00px !important
+}
+
+.debt-info-container {
+    background-color: #dddcdc;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    max-width: 890px !important;
+}
+
+.hide-for-screenshot {
+    display: none !important;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.top-margin {
+    margin-top: 20px; /* Adjust this value to change the space */
+    font-size: 1.2em;
+}
+
+.save-button {
+    background-color: #789679; /* Green background */
+    border: none; /* No border */
+    color: white; /* White text */
+    padding: 5px 15px; /* Padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Transition effect for hover state */
+}
+
+/* Hover state */
+.save-button:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Active state (button is clicked) */
+.save-button:active {
+    background-color: #3e8e41; /* Even darker green */
+    box-shadow: 0 5px #666; /* Shadow effect */
+    transform: translateY(4px); /* Move button down a bit */
+}
+
+/* Focus state (button is selected) */
+.save-button:focus {
+    outline: none; /* Remove default outline */
+    border: 2px solid #4CAF50; /* Add a green border */
+}
+
+
+.elegant-button {
+    background-color: #dadada; /* Soft grey */
+    color: #555; /* Dark grey text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transition effect for hover state */
+}
+
+/* Hover state */
+.elegant-button:hover {
+    background-color: #d1c4e9; /* Soft purple */
+    color: #3f51b5; /* Dark blue text */
+}
+
+/* Active state (button is clicked) */
+.elegant-button:active {
+    background-color: #b39ddb; /* Darker purple */
+    color: #1a237e; /* Even darker blue text */
+    box-shadow: 0 5px #666; /* Shadow effect */
+    transform: translateY(4px); /* Move button down a bit */
+}
+
+
+.alert-container {
+    max-width: 880px;
+    background-color: #d1d3d4; /* Soft gray background */
+    color: #333; /* Jet black text for readability */
+    font-family: 'Arial', sans-serif; /* Consistent font style */
+    text-align: center; /* Centered text */
+    padding: 20px; /* Ample padding */
+    margin: 30px auto; /* This sets the top and bottom margin to 30px and automatically centers the container horizontally */
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #b0bec5; /* Subtle border color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    margin-top: 20px; /* Adequate spacing from other elements */
+}
+  .alert-heading {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .alert-body {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-top: 10px;
+    color: black;
+  }
+
+
+  
+  
+  .myButton {
+    background-color: #00CED1; /* Dark turquoise (neon-like) */
+    border: 1px solid #00E5EE; /* Lighter neon turquoise for border */
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+
+  .myButton:hover {
+    background-color: #00FFFF; /* Aqua (neon-like) */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .title-embossed {
+    background-color: #f0f0f0;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  .title-embossed .title-text {
+    margin: 0 auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    padding-left: 10px;
+    flex-grow: 1;
+    color: #495057;
+  }
+
+  .button-container {
+    position: absolute;
+    left: 20px; /* Adjust as needed */
+  }
+
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.currency-selector {
+    text-align: center;
+}
+
+.results-table {
+    text-align: center;
+}
+
+
+/* styles.css */
+.custom-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Space between each child container */
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+}
+
+.child-container {
+    width: 100%; /* Ensure child containers take full width */
+    max-width: 800px; /* Optional: limit the max width */
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+}
+
+
+/* Ensure all form inputs and select boxes have the same width */
+.form-control {
+    width: 100%;        /* Full width for mobile */
+    max-width: 250px;   /* Set max-width for all form inputs and the select dropdown */
+    margin: 0 auto;     /* Center the elements */
+}
+
+select {
+    width: 100%;        /* Full width by default */
+    max-width: 250px;   /* Make select box the same width as other inputs */
+    margin: 0 auto;     /* Center the select box */
+}
+
+@media (min-width: 768px) {
+    .form-control, select {
+        max-width: 230px;  /* Ensure uniform width on larger screens */
+    }
+}
+
+
+/* ========================================
+   AI debt predictor layout
+   ======================================== */
+
+.debt-predictor-page {
+    padding-bottom: 3rem;
+}
+
+.debt-predictor-page .title-embossed {
+    background-color: #dddcdc;
+    border: 1px solid #c9c8c8;
+    margin-bottom: 0.75rem;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.debt-predictor-page .title-embossed .title-text.dp-title-stack {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.debt-predictor-page .dp-title-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.debt-predictor-page .dp-main-title {
+    font-size: clamp(1rem, 2.8vw, 1.35rem);
+    font-weight: bold;
+    line-height: 1.25;
+    color: #495057;
+}
+
+.debt-predictor-page .dp-main-subtitle {
+    font-size: clamp(0.78rem, 1.8vw, 0.95rem);
+    font-weight: 500;
+    color: #6c757d;
+    margin-top: 0.45rem;
+    max-width: 32rem;
+    line-height: 1.4;
+}
+
+.debt-predictor-page .dp-advice-banner {
+    font-size: 0.88rem;
+    color: #495057;
+    background-color: #f0f0f0;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    max-width: 560px;
+    text-align: center;
+    margin-bottom: 1.35rem;
+}
+
+.debt-predictor-page .my_container {
+    margin-bottom: 1.2rem;
+}
+
+.debt-predictor-page .dp-key-takeaway {
+    background-color: #e4e4e4;
+    border-left: 4px solid #6c757d;
+    border-radius: 8px;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #343a40;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Main content column: model, chart, table, AI info — same width (overrides global .my_container 70%) */
+.debt-predictor-page .my_container.dp-main-column {
+    width: 100%;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Grey panels (model, chart, table, form) — match calculator .debt-info-container */
+.debt-predictor-page .dp-white-card {
+    background-color: #dddcdc;
+    border: 1px solid #c9c8c8;
+    border-radius: 10px;
+    padding: clamp(0.9rem, 2.2vw, 1.35rem) clamp(1rem, 2.5vw, 1.5rem);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.debt-predictor-page .dp-bordered-hint {
+    background-color: #dddcdc;
+    border: 1px solid #c9c8c8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    font-size: 0.98rem;
+    color: #495057;
+}
+
+.debt-predictor-page .dp-model-compare {
+    text-align: left;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    line-height: 1.6;
+    color: #495057;
+    box-sizing: border-box;
+}
+
+.debt-predictor-page .dp-form-card {
+    padding: clamp(0.85rem, 2vw, 1.25rem) clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.debt-predictor-page .dp-field label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+}
+
+.debt-predictor-page .dp-field .form-control-lg {
+    width: 100%;
+    max-width: min(280px, 100%);
+}
+
+@media (min-width: 992px) {
+    .debt-predictor-page .dp-field .form-control-lg {
+        max-width: 200px;
+    }
+}
+
+.debt-predictor-page .dp-actions {
+    margin-top: 1.35rem;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.debt-predictor-page .compound-results-container {
+    margin-top: 1.35rem;
+    margin-bottom: 0.5rem;
+}
+
+.debt-predictor-page .compound-results-container:first-of-type {
+    margin-top: 0.4rem;
+}
+
+.debt-predictor-page .compound-results {
+    margin-top: 0.85rem;
+    margin-bottom: 0.55rem;
+}
+
+.debt-predictor-page .dp-summary-grid {
+    display: grid;
+    gap: 0.55rem 0.65rem;
+    max-width: 900px;
+    margin: 0 auto 1.1rem;
+    padding: 0 6px;
+}
+
+.debt-predictor-page .dp-summary-grid--six {
+    grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+}
+
+/* Top summary tiles only: calculator blue (.info-box #cde2ee) */
+.debt-predictor-page .dp-metric-card {
+    background-color: #cde2ee;
+    border: 1px solid #b7d4e4;
+    border-radius: 10px;
+    padding: 0.95rem 0.65rem 0.85rem;
+    text-align: center;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.debt-predictor-page .dp-metric-card h4 {
+    margin-bottom: 0.45rem;
+    font-size: 0.88rem;
+    color: #333;
+}
+
+.debt-predictor-page .dp-metric-card p {
+    margin-bottom: 0;
+    font-size: 1rem;
+    color: #212529;
+}
+
+.debt-predictor-page .dp-metric-hint {
+    font-size: 0.72rem;
+    color: #6c757d;
+    margin-top: 0.35rem;
+    margin-bottom: 0 !important;
+    line-height: 1.25;
+    max-width: 12rem;
+}
+
+.debt-predictor-page .alert-container {
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Match calculator .debt-info-container grey */
+.debt-predictor-page .dp-info-panel {
+    background-color: #dddcdc;
+    border: 1px solid #c9c8c8;
+    border-radius: 10px;
+    padding: 1.1rem 1.35rem;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-sizing: border-box;
+    color: #495057;
+    line-height: 1.65;
+    text-align: left;
+}
+
+.debt-predictor-page .dp-chart-card {
+    padding: clamp(0.65rem, 1.8vw, 1rem);
+}
+
+.debt-predictor-page .dp-chart-card--hero {
+    padding: clamp(0.85rem, 2.2vw, 1.35rem);
+}
+
+/* Lighter inset on grey chart card */
+.debt-predictor-page .dp-chart-card .dp-chart-wrap {
+    background-color: #ececec;
+    border-radius: 8px;
+}
+
+.debt-predictor-page .dp-chart-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    height: 280px;
+}
+
+/* ~35% taller than prior sizes — chart as centrepiece */
+.debt-predictor-page .dp-chart-wrap--large {
+    max-width: min(1000px, 100%);
+    height: 405px;
+}
+
+@media (min-width: 576px) {
+    .debt-predictor-page .dp-chart-wrap--large {
+        height: 515px;
+    }
+}
+
+@media (min-width: 992px) {
+    .debt-predictor-page .dp-chart-wrap--large {
+        height: 620px;
+    }
+}
+
+.debt-predictor-page .dp-table-card {
+    padding: 0.65rem 0.85rem 1rem;
+}
+
+.debt-predictor-page .dp-table-card .table thead th {
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #495057;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+}
+
+.debt-predictor-page .dp-table-card .table td,
+.debt-predictor-page .dp-table-card .table th {
+    padding: 0.55rem 0.75rem;
+}
+
+.debt-predictor-page .dp-table-note {
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.debt-predictor-page .dp-footer-actions {
+    margin-top: 1.35rem;
+    margin-bottom: 0.85rem;
+}
+
+.debt-predictor-page .dp-footer-actions .custom-calculate-btn {
+    text-decoration: none;
+}
